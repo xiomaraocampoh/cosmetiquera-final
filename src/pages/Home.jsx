@@ -1,39 +1,34 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-import '../index.css';
 
-export default function Home() {
-  return (
-    <main className="page-container">
-      <section className="hero">
-        <h1>Bienvenida a Cosmetiquera</h1>
-        <p>Descubre nuestra colección de productos de belleza premium</p>
-        <Link to="/catalogo" className="btn btn-primary">
-          Ver Catálogo
-        </Link>
-      </section>
+const Home = () => {
+    return (
+        <main>
+            <section className="hero-section">
+                <h1>Resalta tu belleza natural con Cosmetiquera</h1>
+                <p>Descubre nuestra selección de maquillaje y cuidado facial con asesoría personalizada.</p>
+                <Link to="/catalogo" className="btn-primary">Explorar catálogo</Link>
+            </section>
 
-      <section className="features">
-        <div className="feature-card">
-          <h2>Productos Premium</h2>
-          <p>Selección cuidada de marcas reconocidas internacionalmente</p>
-        </div>
-        <div className="feature-card">
-          <h2>Asesoría Personalizada</h2>
-          <p>Nuestros expertos te ayudarán a encontrar lo perfecto para ti</p>
-        </div>
-        <div className="feature-card">
-          <h2>Entrega Rápida</h2>
-          <p>Recibe tus productos en la comodidad de tu hogar</p>
-        </div>
-      </section>
+            <section className="featured-categories">
+                <h2>Categorías Destacadas</h2>
+                <div className="categories-grid">
+                    <article className="category-card">
+                        <h3>Cuidado Facial</h3>
+                        <p>Serums, protectores solares y rutinas de hidratación de alta calidad.</p>
+                    </article>
+                    <article className="category-card">
+                        <h3>Maquillaje</h3>
+                        <p>Bases, correctores y paletas con pigmentación profesional.</p>
+                    </article>
+                    <article className="category-card">
+                        <h3>Accesorios</h3>
+                        <p>Brochas y herramientas esenciales para tu rutina diaria.</p>
+                    </article>
+                </div>
+            </section>
+        </main>
+    );
+};
 
-      <section className="cta">
-        <h2>¿Necesitas ayuda?</h2>
-        <p>Contacta con nuestros asesores de belleza</p>
-        <Link to="/contacto" className="btn btn-secondary">
-          Solicitar Asesoría
-        </Link>
-      </section>
-    </main>
-  );
-}
+export default Home;
