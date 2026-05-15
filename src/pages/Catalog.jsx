@@ -1,63 +1,79 @@
-import { useState, useEffect } from 'react';
-import { getProducts } from '../services/mockApi';
-import '../index.css';
+import React, { useState, useEffect } from 'react';
+import { fetchProducts } from '../services/mockApi';
 
-export default function Catalog() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const Catalog = () => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  useEffect(() => {
-    setLoading(true);
-    getProducts()
-      .then((data) => {
-        setProducts(data);
-        setError(null);
-      })
-      .catch((err) => {
-        setError(err.message || 'Error al cargar productos');
-        setProducts([]);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                setLoading(true);
+                const data = await fetchProducts();
+                setProducts(data);
+                setError(null);
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
+    }, []);
 
-  if (loading) {
+    if (loading) {
+        return (
+            <main className="status-container">
+                <p role="status">Cargando catálogo de belleza...</p>
+            </main>
+        );
+    }
+
+    if (error) {
+        return (
+            <main className="status-container">
+                <section className="error-message">
+                    <h2>Hubo un inconveniente</h2>
+                    <p>{error.message}</p>
+                    <button onClick={() => window.location.reload()} className="btn-retry">
+                        Intentar cargar de nuevo
+                    </button>
+                </section>
+            </main>
+        );
+    }
+
     return (
-      <main className="page-container">
-        <h1>Catálogo de Productos</h1>
-        <div className="loading">Cargando productos...</div>
-      </main>
-    );
-  }
+        <main>
+            <section className="catalog-header">
+                <h1>Nuestro Catálogo</h1>
+                <p>Explora productos seleccionados para tu cuidado personal.</p>
+            </section>
 
-  if (error) {
-    return (
-      <main className="page-container">
-        <h1>Catálogo de Productos</h1>
-        <div className="error">
-          <p>⚠️ {error}</p>
-          <p>Por favor, intenta más tarde.</p>
-        </div>
-      </main>
+            {products.length === 0 ? (
+                <section className="empty-state">
+                    <p>No hay productos disponibles en este momento. Vuelve pronto.</p>
+                </section>
+            ) : (
+                <section className="products-grid">
+                    {products.map((product) => (
+                        <article key={product.id} className="product-card">
+                            <img src={product.image} alt={product.name} />
+                            <div className="product-info">
+                                <h3>{product.name}</h3>
+                                <p className="brand">{product.brand}</p>
+                                <p className="price">${product.price.toLocaleString('es-CO')}</p>
+                                <a href="/contacto" className="btn-action">
+                                    Solicitar asesoría
+                                </a>
+                            </div>
+                        </article>
+                    ))}
+                </section>
+            )}
+        </main>
     );
-  }
+};
 
-  return (
-    <main className="page-container">
-      <h1>Catálogo de Productos</h1>
-      <div className="products-grid">
-        {products.map((product) => (
-          <div key={product.id} className="product-card">
-            <img src={product.image} alt={product.name} className="product-image" />
-            <h3>{product.name}</h3>
-            <p className="brand">{product.brand}</p>
-            <p className="category">{product.category}</p>
-            <p className="description">{product.description}</p>
-            <p className="price">${product.price.toLocaleString('es-CO')}</p>
-            <button className="btn btn-primary">Agregar al carrito</button>
-          </div>
-        ))}
-      </div>
-    </main>
-  );
-}
+export default Catalog;
